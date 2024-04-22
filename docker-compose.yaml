@@ -1,0 +1,6 @@
+version: '3'
+services:
+  cbr:
+    build: .
+    ports:
+      - '${PORT}:${PORT}'

@@ -17,6 +17,7 @@ def get_rate(code: str, date: str = '') -> float:
     rate_values = soup.find_all('VunitRate')
 
     chars = list(map(lambda x: x.text, chars))
+
     rate_values = list(map(lambda x: float(x.text.replace(',', '.')),
                            rate_values))
 
