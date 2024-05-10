@@ -22,13 +22,20 @@ def get_info():
 
 
 @app.get("/info/currency")
-def get_rate(currency: str, date: str = ''):
+def get_rate(currency: str = None, date: str = ''):
     result = {
-        'service': 'currency',
-        'data': {
-            currency: parser.get_rate(currency, date)
+            'service': 'currency'
+            }
+    if currency is None:
+        result = result | {'data': parser.get_rate(currency, date)}
+
+    else:
+        result = {
+            'service': 'currency',
+            'data': {
+                currency: parser.get_rate(currency, date)
+            }
         }
-    }
 
     return Response(content=json.dumps(result, indent=4),
                     media_type="application/json")

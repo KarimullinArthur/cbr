@@ -5,7 +5,7 @@ import requests
 URL = 'http://www.cbr.ru/scripts/XML_daily.asp?date_req='
 
 
-def get_rate(code: str, date: str = '') -> float:
+def get_rate(code: str | None = None, date: str = '') -> float:
     date = reversed(date.split('-'))
     date = '/'.join(str(x) for x in date)
 
@@ -14,13 +14,18 @@ def get_rate(code: str, date: str = '') -> float:
     soup = bs.BeautifulSoup(resp, "xml")
 
     chars = soup.find_all('CharCode')
-    rate_values = soup.find_all('VunitRate')
+    rate_values = soup.find_all('Value')
 
     chars = list(map(lambda x: x.text, chars))
 
     rate_values = list(map(lambda x: float(x.text.replace(',', '.')),
                            rate_values))
 
+    if code is None:
+        return dict(zip(chars, rate_values))
+
     for rate_currency in rate_values:
         if chars[rate_values.index(rate_currency)] == code:
             return rate_currency
+
+print(get_rate())
