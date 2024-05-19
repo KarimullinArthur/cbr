@@ -10,7 +10,7 @@ node {
     stage('Build docker image') {
         dir("repo") { 
             withCredentials([usernamePassword(credentialsId: 'DockerHub', passwordVariable: 'HUB_PASSWORD', usernameVariable: 'HUB_USERNAME')]) {
-                sh("buildah bud --security-opt apparmor=unconfined --tag ${HUB_USERNAME}/cbr:latest -f ./Dockerfile .")
+                sh("buildah bud --tag ${HUB_USERNAME}/cbr:latest -f ./Dockerfile .")
                 }
                 
             }
