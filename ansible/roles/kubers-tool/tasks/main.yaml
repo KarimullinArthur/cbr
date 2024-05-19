@@ -1,0 +1,39 @@
+---
+
+- include_vars:
+    file: vars/main.yaml
+    name: main
+
+- name: Install dependencies for adding the repositories
+  ansible.builtin.apt:
+    name:
+      - curl
+      - software-properties-common
+    state: latest
+
+- name: Get Kubernetes tools apt-key
+  apt_key:
+    url: https://pkgs.k8s.io/core:/stable:/{{  version  }}/deb/Release.key
+    keyring: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  register: kuber_repo_key
+
+- name: Add Kubernetes stable repo
+  apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{  version  }}/deb/ /"
+    filename: kubernetes
+  register: kuber_repo
+
+- name: Update apt cache when needed
+  apt:
+    update_cache: true
+  become: true
+  when: kuber_repo.changed or kuber_repo_key.changed
+
+- name: install required packages
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    update_cache: true
+    state: present

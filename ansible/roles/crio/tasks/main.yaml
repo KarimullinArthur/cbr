@@ -1,0 +1,47 @@
+---
+
+- include_vars:
+    file: vars/main.yaml
+    name: main
+
+- name: Install dependencies for adding the repositories
+  ansible.builtin.apt:
+    name:
+      - curl
+      - software-properties-common
+    state: latest
+
+- name: Get Cri-o apt-key
+  apt_key:
+    url: https://pkgs.k8s.io/addons:/cri-o:/{{  project_path  }}/deb/Release.key
+    keyring: /etc/apt/keyrings/cri-o-apt-keyring.gpg
+  register: crio_repo_key
+
+- name: Add Cri-o stable repo
+  apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/{{  project_path  }}/deb/ /"
+    filename: cri-o 
+  register: crio_repo
+
+- name: Update apt cache when needed
+  apt:
+    update_cache: true
+  become: true
+  when: crio_repo.changed or crio_repo_key.changed
+
+- name: install required packages
+  apt:
+    name:
+      - cri-o
+    update_cache: true
+    state: present
+
+- name: Enable Cri-o Service
+  systemd:
+    name: crio
+    enabled: yes
+
+- name: Make sure a crio is running
+  systemd:
+    state: started
+    name: crio
