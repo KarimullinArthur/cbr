@@ -27,5 +27,3 @@ def get_rate(code: str | None = None, date: str = '') -> float:
     for rate_currency in rate_values:
         if chars[rate_values.index(rate_currency)] == code:
             return rate_currency
-
-print(get_rate())
