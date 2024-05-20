@@ -15,8 +15,20 @@ node {
                 
             }
         }
+
+    stage("Run python tests") {
+        dir("repo/src"){
+            withPythonEnv('python3') {
+                sh('pip -f requests.txt')
+                sh('ln -s ../tests/test_*')
+                sh('pytest')
+                sh('rm test_*')
+                }
+            }
+            
+        }
     
-    stage('Push docker image to docker hub') {
+    stage("Push docker image to docker hub") {
         dir("repo") {
             withCredentials([usernamePassword(credentialsId: 'DockerHub', passwordVariable: 'HUB_PASSWORD', usernameVariable: 'HUB_USERNAME')]) {
             sh """
