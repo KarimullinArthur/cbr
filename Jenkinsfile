@@ -18,7 +18,7 @@ node {
 
     stage("Run python tests") {
         dir("repo/src"){
-            sh('pip -f requests.txt')
+            sh('pip install -r requirements.txt')
             sh('ln -s ../tests/test_*')
             sh('pytest')
             sh('rm test_*')
