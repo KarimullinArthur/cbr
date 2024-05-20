@@ -17,15 +17,18 @@ node {
         }
 
     stage("Run python tests") {
-        dir("repo/src"){
+        dir("repo"){
             sh('python3 -m venv env && source env/bin/activate')
             sh('pip install -r requirements.txt')
+        }
+
+        dir("repo/src"){
             sh('ln -s ../tests/test_*')
             sh('pytest')
             sh('rm test_*')
-            }
-            
         }
+            
+    }
     
     stage("Push docker image to docker hub") {
         dir("repo") {
