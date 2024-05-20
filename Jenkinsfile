@@ -18,6 +18,7 @@ node {
 
     stage("Run python tests") {
         dir("repo/src"){
+            sh('python3 -m venv env && source env/bin/activate')
             sh('pip install -r requirements.txt')
             sh('ln -s ../tests/test_*')
             sh('pytest')
