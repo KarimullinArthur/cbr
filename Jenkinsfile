@@ -18,12 +18,10 @@ node {
 
     stage("Run python tests") {
         dir("repo/src"){
-            withPythonEnv('python3') {
-                sh('pip -f requests.txt')
-                sh('ln -s ../tests/test_*')
-                sh('pytest')
-                sh('rm test_*')
-                }
+            sh('pip -f requests.txt')
+            sh('ln -s ../tests/test_*')
+            sh('pytest')
+            sh('rm test_*')
             }
             
         }
