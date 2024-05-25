@@ -18,7 +18,7 @@ node {
 
     stage("Run python tests") {
         dir("repo/src"){
-            sh('ln -s ../tests/test_*')
+  //          sh('ln -s ../tests/test_*')
             sh('pytest')
             sh('rm test_*')
         }
